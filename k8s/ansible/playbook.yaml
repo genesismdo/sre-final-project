@@ -1,0 +1,13 @@
+# Ansible playbook to deploy monitoring stack
+- name: Deploy monitoring stack
+  hosts: all
+  tasks:
+
+    - name: Apply Prometheus
+      command: kubectl apply -f ../monitoring/prometheus.yaml
+
+    - name: Apply Grafana
+      command: kubectl apply -f ../monitoring/grafana.yaml
+
+    - name: Apply Alertmanager
+      command: kubectl apply -f ../k8s/monitoring/alertmanager.yaml

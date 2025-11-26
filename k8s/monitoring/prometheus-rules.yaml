@@ -1,0 +1,30 @@
+#monitoring/sre-monitoring-rules
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+data:
+  sre-rules.yaml: |
+    groups:
+      - name: sre-monitoring-alerts
+        rules:
+          # ALERTA 1 – La app no responde o está caída
+          - alert: AppDown
+            expr: up{job="sre-monitoring-app"} == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              description: "La aplicación no está respondiendo 📛"
+              summary: "SRE Monitoring App está caída."
+
+          # ALERTA 2 – Muy pocas peticiones
+          - alert: LowRequestTraffic
+            expr: rate(example_app_http_requests_total[2m]) < 0.1
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              description: "El tráfico hacia la app bajó considerablemente."
+              summary: "Pocas requests recibidas por la app."
